@@ -1,3 +1,4 @@
 {
-    "editor.foldingStrategy": "indentation"
+    "editor.foldingStrategy": "indentation",
+    "http.proxy": "http://proxy.global.sonyericsson.net:8080/accelerated_pac_base.pac"
 }

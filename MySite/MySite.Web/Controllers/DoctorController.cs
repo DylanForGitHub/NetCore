@@ -8,10 +8,11 @@ using MySite.Web.Models;
 using MySite.Model;
 using Microsoft.EntityFrameworkCore;
 using MySite.Common;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MySite.Web.Controllers
 {
-    public class DoctorController : Controller
+    public class DoctorController : BaseController
     {
         private readonly DataContext _context;
         public DoctorController(DataContext context)
@@ -28,10 +29,12 @@ namespace MySite.Web.Controllers
         //{
         //    return View(await _context.Doctors.ToListAsync());
         //}
-
+        [Authorize]
+        //[AllowAnonymous]
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-                
+            //string ss = HttpContext.User.Identity.IsAuthenticated.ToString();
+            PreAction();
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
 
@@ -68,7 +71,7 @@ namespace MySite.Web.Controllers
                     break;
             }
 
-            int pageSize = 10;
+            int pageSize = 3;
             return View(await PagedList<Doctor>.CreateAsync(doctors.AsNoTracking(), page ?? 1, pageSize));
         }
 

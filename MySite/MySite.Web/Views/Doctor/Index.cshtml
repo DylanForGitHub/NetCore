@@ -50,7 +50,7 @@
                     @if(@ShowDetailsOnly)
                     {
                         /*<a asp-action="Details" asp-route-id="@item.ID">Details</a>*/
-                        <a href="#" onclick="showDetail(1)" >Details</a>
+                        <a href="#" onclick="showDetail(@item.ID)" >Details</a>
                     }
                     else
                     {
@@ -85,51 +85,34 @@
                 <div class="modal-body">
 
                     <div class="form-group">
-                        <label for="txt_departmentname">部门名称</label>
-                        <input type="text" name="txt_departmentname" class="form-control" id="txt_departmentname" placeholder="部门名称">
+                        <label for="txt_id">ID</label>
+                        <input type="text" name="txt_id" class="form-control" id="txt_id" placeholder="ID" readonly="readonly">
                     </div>
                     <div class="form-group">
-                        <label for="txt_parentdepartment">上级部门</label>
-                        <input type="text" name="txt_parentdepartment" class="form-control" id="txt_parentdepartment" placeholder="上级部门">
+                        <label for="txt_name">Name</label>
+                        <input type="text" name="txt_name" class="form-control" id="txt_name" placeholder="Name" readonly="readonly">
                     </div>
                     <div class="form-group">
-                        <label for="txt_departmentlevel">部门级别</label>
-                        <input type="text" name="txt_departmentlevel" class="form-control" id="txt_departmentlevel" placeholder="部门级别">
+                        <label for="txt_department">Department</label>
+                        <input type="text" name="txt_department" class="form-control" id="txt_department" placeholder="Department" readonly="readonly">
                     </div>
-                    <div class="form-group">
+                    <!--<div class="form-group">
                         <label for="txt_statu">描述</label>
                         <input type="text" name="txt_statu" class="form-control" id="txt_statu" placeholder="状态">
-                    </div>
+                    </div>-->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
-                    <button type="button" id="btn_submit" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Close</button>
+                    <!--<button type="button" id="btn_submit" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存</button>-->
                 </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-function showDetail(id){
-    alert(id);
-    $.ajax({
-                type: "post",
-                url: "/Web/API/GetDetails",
-                data: { "ID": id },
-                success: function (data, status) {
-                    if (status == "success") {
-                        //$("#myModalLabel").text("新增");
-                        $('#myModal').modal();
-                    }
-                },
-                error: function () {
-                    //toastr.error('Error');
-                    alert("failed...")
-                },
-                complete: function () {
 
-                }
 
-        });
+function beforeshowdetails(){
+
 }
 </script>

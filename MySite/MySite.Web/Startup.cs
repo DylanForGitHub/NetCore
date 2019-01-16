@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MySite.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Session;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Pomelo.EntityFrameworkCore.MySql;
 
 namespace MySite.Web
@@ -34,11 +36,22 @@ namespace MySite.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            //var connection = "Filename=MySiteDemo.db";
-            //services.AddDbContext<DataContext>(options => options.UseSqlite(connection));
+            ///var connection = "Filename=MySiteDemo.db";
+            ///services.AddDbContext<DataContext>(options => options.UseSqlite(connection));
             var mysqlconnection = "Server=localhost;database=madb;uid=root;pwd=1qaz2wsxE;SslMode=None";
             services.AddDbContext<DataContext>(options => options.UseMySql(mysqlconnection));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            //services.AddSession();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options => {
+                options.LoginPath = "/Account/IndexCookie/";
+                //options.Cookie.Expiration = new TimeSpan(0, 0, 30);
+                //options.ReturnUrlParameter = "";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +70,17 @@ namespace MySite.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            //app.UseSession();
+            app.UseAuthentication();
+
+            //app.UseCookieAuthentication(options =>
+            //{
+            //    options.AuthenticationScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //    options.LoginPath = new PathString("/user/login");
+            //    options.AutomaticAuthenticate = true;
+            //    options.AutomaticChallenge = true;
+            //    options.CookieHttpOnly = true;
+            //});
 
             app.UseMvc(routes =>
             {

@@ -1,0 +1,30 @@
+@model LoginModel
+<div class="login-box-body" style="width:400px;">
+    <p class="login-box-msg">Permission Management System</p>
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <form asp-controller="Account" asp-action="LoginCookie" method="post" autocomplete="off">
+        <div class="form-group has-feedback">
+            <input asp-for="UserName" type="text" class="form-control" placeholder="UserName">
+            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+        <div class="form-group has-feedback">
+            <input asp-for="Password" type="password" class="form-control" placeholder="Password">
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        </div>
+        <div class="row">
+            <div class="col-xs-8">
+            <div class="checkbox icheck">
+                <label>
+                    <input asp-for="RememberMe" type="checkbox"> RememberMe
+                </label>
+            </div>
+            </div>
+            <!-- /.col -->
+            <div class="col-xs-4">
+                <button type="submit" class="btn btn-primary btn-block btn-flat">Login</button>
+            </div>
+                    <!-- /.col -->
+        </div>
+    </form>
+</div>
