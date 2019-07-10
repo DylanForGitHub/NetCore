@@ -14,6 +14,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 
 namespace MySite.Web.Controllers
 {
@@ -21,10 +22,13 @@ namespace MySite.Web.Controllers
     public class AccountController : BaseController
     {
         private readonly DataContext _context;
+
+        private readonly ILogger _logger;
         
-        public AccountController(DataContext context)
+        public AccountController(DataContext context, ILogger<AccountController> logger)
         {
             _context = context;
+            _logger = logger;
         }    
 
         public IActionResult Index()
@@ -34,12 +38,14 @@ namespace MySite.Web.Controllers
 
         public IActionResult IndexCookie(string ReturnUrl = null)
         {
+            _logger.LogInformation("Start IndexCookie...");
             return View();
         }
 
         [HttpPost]
         public IActionResult Login(LoginModel model)
         {
+            _logger.LogInformation("Start Login...");
             if (ModelState.IsValid)
             {
                 //检查用户信息
@@ -83,29 +89,36 @@ namespace MySite.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                _logger.LogInformation("Start LoginCookie...");
                 //检查用户信息
-                var user = CheckUser(model.UserName, model.Password);
-                if (user != null)
+                try
                 {
-                    var claims = new List<Claim>{
-                        new Claim(ClaimTypes.Name, model.UserName)
-                    };
-                    
-                    var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    ClaimsPrincipal  principal = new ClaimsPrincipal (userIdentity);
-                    AuthenticationProperties authProperties = new AuthenticationProperties
+                    var user = CheckUser(model.UserName, model.Password);
+                    if (user != null)
                     {
-                        IsPersistent = true,
-                        ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(2)
-                    };
-                    if(model.RememberMe)
-                    {
-                        authProperties.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(10);
+                        var claims = new List<Claim>{
+                            new Claim(ClaimTypes.Name, model.UserName)
+                        };
+                        
+                        var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        ClaimsPrincipal  principal = new ClaimsPrincipal (userIdentity);
+                        AuthenticationProperties authProperties = new AuthenticationProperties
+                        {
+                            IsPersistent = true,
+                            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(2)
+                        };
+                        if(model.RememberMe)
+                        {
+                            authProperties.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(10);
+                        }
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
+                        //await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                        
+                        return RedirectToAction("Index", "Doctor");
                     }
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
-                    //await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-                    
-                    return RedirectToAction("Index", "Doctor");
+                catch (System.Exception ex)
+                {
+                    _logger.LogInformation(ex);
                 }
             }
             return View("Index", model);

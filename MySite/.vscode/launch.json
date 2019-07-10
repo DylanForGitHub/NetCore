@@ -21,7 +21,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/MySite.Web/bin/Debug/netcoreapp2.1/MySite.Web.dll",
+            "program": "${workspaceFolder}/MySite.Web/bin/Debug/netcoreapp2.2/MySite.Web.dll",
             "args": [],
             "cwd": "${workspaceFolder}/MySite.Web",
             "stopAtEntry": false,

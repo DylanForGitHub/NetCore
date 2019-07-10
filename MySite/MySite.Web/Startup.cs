@@ -40,7 +40,7 @@ namespace MySite.Web
             ///services.AddDbContext<DataContext>(options => options.UseSqlite(connection));
             var mysqlconnection = "Server=localhost;database=madb;uid=root;pwd=1qaz2wsxE;SslMode=None";
             services.AddDbContext<DataContext>(options => options.UseMySql(mysqlconnection));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
