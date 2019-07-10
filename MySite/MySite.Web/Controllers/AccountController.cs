@@ -119,7 +119,7 @@ namespace MySite.Web.Controllers
                 }
                 catch (System.Exception ex)
                 {
-                    _logger.LogInformation(ex);
+                    _logger.LogInformation(ex,.ToString());
                 }
             }
             return View("Index", model);
