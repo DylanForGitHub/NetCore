@@ -116,6 +116,7 @@ namespace MySite.Web.Controllers
                         
                         return RedirectToAction("Index", "Doctor");
                     }
+                }
                 catch (System.Exception ex)
                 {
                     _logger.LogInformation(ex);
