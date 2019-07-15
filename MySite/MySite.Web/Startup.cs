@@ -14,6 +14,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Session;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Pomelo.EntityFrameworkCore.MySql;
+using Microsoft.Extensions.Logging;
+using NLog.Web;
+using NLog.Extensions.Logging;
 
 namespace MySite.Web
 {
@@ -55,7 +58,7 @@ namespace MySite.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -69,6 +72,8 @@ namespace MySite.Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            loggerFactory.AddNLog();
+            env.ConfigureNLog("Nlog.config");
             app.UseCookiePolicy();
             //app.UseSession();
             app.UseAuthentication();
