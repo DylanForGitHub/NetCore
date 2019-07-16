@@ -19,9 +19,12 @@ namespace MySite.Model
         //}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Doctor>().ToTable("Doctor");
-            modelBuilder.Entity<Login>().ToTable("Users");
-            modelBuilder.Entity<Registion>().ToTable("Registion");
+            //modelBuilder.Entity<Doctor>().ToTable("Doctor");
+            //modelBuilder.Entity<Login>().ToTable("Users");
+            //modelBuilder.Entity<Registion>().ToTable("Registion");
+            modelBuilder.Entity<Doctor>().ToTable("doctor");
+            modelBuilder.Entity<Login>().ToTable("users");
+            modelBuilder.Entity<Registion>().ToTable("registion");
         }
 
         public DbSet<Doctor> Doctors { get; set; }
