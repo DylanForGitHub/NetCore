@@ -34,6 +34,13 @@ namespace MySite.Web.Controllers
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             //string ss = HttpContext.User.Identity.IsAuthenticated.ToString();
+	    var logger = NLog.LogManager.GetCurrentClassLogger();
+	    logger.Info("Test in Index of Doctor...");
+	    var doctors = from s in _context.Doctors
+                        select s;
+	    logger.Info("Doctors has got.");
+	    try
+	    {
             PreAction();
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
@@ -49,8 +56,7 @@ namespace MySite.Web.Controllers
 
             ViewData["CurrentFilter"] = searchString;
 
-            var doctors = from s in _context.Doctors
-                        select s;
+          
             if (!String.IsNullOrEmpty(searchString))
             {
                 doctors = doctors.Where(s => s.Name.Contains(searchString) || s.Department.Contains(searchString));
@@ -70,6 +76,11 @@ namespace MySite.Web.Controllers
                     doctors = doctors.OrderBy(s => s.Name);
                     break;
             }
+	    }
+	    catch(System.Exception ex)
+	    {
+                 logger.Info(ex.ToString());
+	    }
 
             int pageSize = 3;
             return View(await PagedList<Doctor>.CreateAsync(doctors.AsNoTracking(), page ?? 1, pageSize));
