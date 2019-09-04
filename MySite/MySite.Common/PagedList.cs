@@ -49,8 +49,11 @@ namespace MySite.Common
 
         public static async Task<PagedList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
         {
+            //var logger = NLog.LogManager.GetCurrentClassLogger();
+	    //logger.Info("Task asyncing...");
             var count = await source.CountAsync();
             var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+	    //logger.Info("Get count " + count.ToString() + " and pageindex " + pageIndex.ToString());
             return new PagedList<T>(items, count, pageIndex, pageSize);
         }
     }

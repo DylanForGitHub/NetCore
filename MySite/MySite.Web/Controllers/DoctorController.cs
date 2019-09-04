@@ -29,8 +29,8 @@ namespace MySite.Web.Controllers
         //{
         //    return View(await _context.Doctors.ToListAsync());
         //}
-        [Authorize]
-        //[AllowAnonymous]
+        //[Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             //string ss = HttpContext.User.Identity.IsAuthenticated.ToString();
@@ -38,13 +38,15 @@ namespace MySite.Web.Controllers
 	    logger.Info("Test in Index of Doctor...");
 	    var doctors = from s in _context.Doctors
                         select s;
+	    var Count = doctors.Count();
+	    logger.Info(Count);
 	    logger.Info("Doctors has got.");
 	    try
 	    {
-            PreAction();
+            //PreAction();
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
-
+            logger.Info("ViewData finished.");
             if (searchString != null)
             {
                 page = 1;
@@ -55,12 +57,13 @@ namespace MySite.Web.Controllers
             }
 
             ViewData["CurrentFilter"] = searchString;
-
+            logger.Info("Search string finished.");
           
             if (!String.IsNullOrEmpty(searchString))
             {
                 doctors = doctors.Where(s => s.Name.Contains(searchString) || s.Department.Contains(searchString));
             }
+	    logger.Info("Start Switch.");
             switch (sortOrder)
             {
                 case "name_desc":
@@ -76,14 +79,17 @@ namespace MySite.Web.Controllers
                     doctors = doctors.OrderBy(s => s.Name);
                     break;
             }
+	    logger.Info("Switch finished.");
 	    }
 	    catch(System.Exception ex)
 	    {
                  logger.Info(ex.ToString());
 	    }
-
-            int pageSize = 3;
-            return View(await PagedList<Doctor>.CreateAsync(doctors.AsNoTracking(), page ?? 1, pageSize));
+	    logger.Info("Start to page..");
+	    int pageSize = 3;
+	    var _pageListDoc = await PagedList<Doctor>.CreateAsync(doctors.AsNoTracking(), page ?? 1, pageSize);
+            
+            return View(_pageListDoc);
         }
 
         
