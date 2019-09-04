@@ -87,8 +87,17 @@ namespace MySite.Web.Controllers
 	    }
 	    logger.Info("Start to page..");
 	    int pageSize = 3;
-	    var _pageListDoc = await PagedList<Doctor>.CreateAsync(doctors.AsNoTracking(), page ?? 1, pageSize);
-            
+	    PagedList<Doctor> _pageListDoc = null;
+	    try
+	    {
+	       _pageListDoc = await PagedList<Doctor>.CreateAsync(doctors.AsNoTracking(), page ?? 1, pageSize);
+	    }
+	    catch(System.Exception ex1)
+            {
+                 logger.Info(ex1.ToString());
+            }
+            logger.Info("Page finished..");
+	    logger.Info(_pageListDoc.TotalPages); 
             return View(_pageListDoc);
         }
 
